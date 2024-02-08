@@ -30,11 +30,14 @@ class Clock {
 public:
     const int radius = 200;
     bool isGettingDragged = false;
+    bool hasClockImage = false;
     
     double secondsInRadians, minutesInRadians, hoursInRadians;
     
-    glm::vec2 pos;
+    ofImage clockImage;
     
+    glm::vec2 pos;
+        
     Clock(glm::vec2 startingPosition) {
         pos = startingPosition;
     }
@@ -43,5 +46,9 @@ public:
     void update();
     bool isInside(glm::vec2 p) {
         return glm::length(pos - p) <= radius;
+    }
+    void setImage(std::string filePath) {
+        clockImage.load(filePath);
+        hasClockImage = true;
     }
 };

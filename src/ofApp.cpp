@@ -11,7 +11,7 @@ Clock myClock = Clock(glm::vec2(ofWindowSettings().getWidth()/2, ofWindowSetting
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+    myClock.setImage("./images/DiscordProfile.png");
 }
 
 //--------------------------------------------------------------
@@ -122,10 +122,7 @@ void Clock::draw() {
     ofSetColor(255, 255, 255);
     ofDrawCircle(pos.x, pos.y, radius);
     
-    // load image for background of clock
-    ofImage clockImage;
-    clockImage.load("./images/DiscordProfile.png");
-    clockImage.draw(pos.x - radius, pos.y - radius, radius * 2, radius * 2);
+    if (hasClockImage) clockImage.draw(pos.x - radius, pos.y - radius, radius * 2, radius * 2);
     
     // set second hand color to red and draw line
     ofSetLineWidth(2);
