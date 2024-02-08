@@ -51,4 +51,9 @@ public:
         clockImage.load(filePath);
         hasClockImage = true;
     }
+    
+    void removeImage() {
+        clockImage.clear();
+        hasClockImage = false;
+    }
 };
