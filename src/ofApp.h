@@ -28,27 +28,25 @@ class ofApp : public ofBaseApp{
 class Clock {
 
 public:
-    const int radius = 200;
+    int radius = 200;
     bool isGettingDragged = false;
     bool hasClockImage = false;
-    bool usingMatrix = false;
     
     double secondsInRadians, minutesInRadians, hoursInRadians;
     
     ofImage clockImage;
     
     glm::vec2 pos;
-    ofMatrix4x4 matrix;
+    
+    Clock(int startingRadius) {
+        radius = startingRadius;
+    }
         
-    Clock(glm::vec2 startingPosition) {
+    Clock(glm::vec2 startingPosition, int startingRadius) {
         pos = startingPosition;
-        usingMatrix = false;
+        radius = startingRadius;
     }
     
-    Clock(ofMatrix4x4 startingMatrix) {
-        matrix = startingMatrix;
-        usingMatrix = true;
-    }
     
     void draw();
     void update();
@@ -63,5 +61,21 @@ public:
     void removeImage() {
         clockImage.clear();
         hasClockImage = false;
+    }
+};
+
+class MatrixClock : public Clock {
+public:
+    ofMatrix4x4 matrix;
+    
+    MatrixClock(ofMatrix4x4 startingMatrix, int startingRadius) : Clock (startingRadius) {
+        matrix = startingMatrix;
+    }
+    
+    void draw();
+    
+    bool isInside(ofMatrix4x4 m) {
+        
+        return true;
     }
 };
