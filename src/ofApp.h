@@ -31,15 +31,23 @@ public:
     const int radius = 200;
     bool isGettingDragged = false;
     bool hasClockImage = false;
+    bool usingMatrix = false;
     
     double secondsInRadians, minutesInRadians, hoursInRadians;
     
     ofImage clockImage;
     
     glm::vec2 pos;
+    ofMatrix4x4 matrix;
         
     Clock(glm::vec2 startingPosition) {
         pos = startingPosition;
+        usingMatrix = false;
+    }
+    
+    Clock(ofMatrix4x4 startingMatrix) {
+        matrix = startingMatrix;
+        usingMatrix = true;
     }
     
     void draw();
