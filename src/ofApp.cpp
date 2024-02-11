@@ -8,10 +8,14 @@ bool isDragging = false;
 glm::vec2 vec;
 
 Clock myClock = Clock(glm::vec2(ofWindowSettings().getWidth()/2, ofWindowSettings().getHeight()/2));
+Clock matrixClock = Clock(ofMatrix4x4(glm::mat4()));
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    matrixClock.matrix.translate(ofWindowSettings().getWidth()/2, ofWindowSettings().getHeight()/2, 0);
+    
     myClock.setImage("./images/DiscordProfile.png");
+    matrixClock.setImage("./images/DiscordProfile.png");
 }
 
 //--------------------------------------------------------------
@@ -21,7 +25,8 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    myClock.draw();
+//    myClock.draw();
+    matrixClock.draw();
 }
 
 //--------------------------------------------------------------
@@ -113,35 +118,41 @@ void Clock::update() {
 }
 
 void Clock::draw() {
-    ofFill();
-    
-    // draw outer casing as a black circle
-    ofDrawCircle(pos.x, pos.y, radius + 15);
-    
-    // draw white background for clock
-    ofSetColor(255, 255, 255);
-    ofDrawCircle(pos.x, pos.y, radius);
-    
-    if (hasClockImage) clockImage.draw(pos.x - radius, pos.y - radius, radius * 2, radius * 2);
-    
-    // set second hand color to red and draw line
-    ofSetLineWidth(2);
-    ofSetColor(255, 0, 0);
-    ofDrawLine(pos.x, pos.y, pos.x + radius * sin(secondsInRadians), pos.y + radius * cos(secondsInRadians) * -1);
-    
-    // draw minute and hour hand lines as black
-    ofSetColor(0, 0, 0);
-    ofSetLineWidth(5);
-    ofDrawLine(pos.x, pos.y, pos.x + radius * sin(minutesInRadians), pos.y + radius * cos(minutesInRadians) * -1);
-    
-    ofSetLineWidth(10);
-    ofDrawLine(pos.x, pos.y, pos.x + radius / 2 * sin(hoursInRadians), pos.y + radius / 2 * cos(hoursInRadians) * -1);
-    
-    // draw a small circle in the center to hide weird edges of clock hands
-    ofDrawCircle(pos.x, pos.y, 10);
-    
-    // draw outer casing circle not filled in to hide weird edges of clock hands
-    ofNoFill();
-    ofSetLineWidth(60);
-    ofDrawCircle(pos.x, pos.y, radius);
+    if (usingMatrix) {
+        if (hasClockImage) clockImage.draw(matrix.getTranslation().x - radius, matrix.getTranslation().y - radius, radius * 2, radius * 2);
+        
+    }
+    else {
+        ofFill();
+        
+        // draw outer casing as a black circle
+        ofDrawCircle(pos.x, pos.y, radius + 15);
+        
+        // draw white background for clock
+        ofSetColor(255, 255, 255);
+        ofDrawCircle(pos.x, pos.y, radius);
+        
+        if (hasClockImage) clockImage.draw(pos.x - radius, pos.y - radius, radius * 2, radius * 2);
+        
+        // set second hand color to red and draw line
+        ofSetLineWidth(2);
+        ofSetColor(255, 0, 0);
+        ofDrawLine(pos.x, pos.y, pos.x + radius * sin(secondsInRadians), pos.y + radius * cos(secondsInRadians) * -1);
+        
+        // draw minute and hour hand lines as black
+        ofSetColor(0, 0, 0);
+        ofSetLineWidth(5);
+        ofDrawLine(pos.x, pos.y, pos.x + radius * sin(minutesInRadians), pos.y + radius * cos(minutesInRadians) * -1);
+        
+        ofSetLineWidth(10);
+        ofDrawLine(pos.x, pos.y, pos.x + radius / 2 * sin(hoursInRadians), pos.y + radius / 2 * cos(hoursInRadians) * -1);
+        
+        // draw a small circle in the center to hide weird edges of clock hands
+        ofDrawCircle(pos.x, pos.y, 10);
+        
+        // draw outer casing circle not filled in to hide weird edges of clock hands
+        ofNoFill();
+        ofSetLineWidth(60);
+        ofDrawCircle(pos.x, pos.y, radius);
+    }
 }
