@@ -37,8 +37,8 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if (matrixClockIsActive) {
-        if (key == 113) mClock.rotationMatrix.rotate(15, 0, 0, mClock.radius);
-        if (key == 101) mClock.rotationMatrix.rotate(-15, 0, 0, mClock.radius);
+        if (key == 113) mClock.rotationMatrix.rotate(-15, 0, 0, mClock.radius);
+        if (key == 101) mClock.rotationMatrix.rotate(15, 0, 0, mClock.radius);
         if (key == 57357) mClock.rotationMatrix.rotate(15, mClock.radius,0 , 0);
         if (key == 57359) mClock.rotationMatrix.rotate(-15, mClock.radius,0 , 0);
         if (key == 57356) mClock.rotationMatrix.rotate(-15, 0, mClock.radius , 0);
@@ -84,6 +84,8 @@ void ofApp::mousePressed(int x, int y, int button){
         ofMatrix4x4 clickedPositionMatrix;
         clickedPositionMatrix.translate(clickedPosition);
         clickedPositionMatrix.translate(mClock.translationMatrix.getInverse().getTranslation());
+        clickedPositionMatrix.rotate(mClock.rotationMatrix.getInverse().getRotate());
+        
         if (mClock.isInside(clickedPositionMatrix)) {
             vec = glm::vec3(mClock.translationMatrix.getTranslation().x - x, mClock.translationMatrix.getTranslation().y - y, 0);
             mClock.isGettingDragged = true;
