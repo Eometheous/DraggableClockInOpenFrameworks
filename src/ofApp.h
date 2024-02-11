@@ -58,6 +58,7 @@ public:
     }
     void setImage(std::string filePath) {
         clockImage.load(filePath);
+        clockImage.resize(radius * 2, radius * 2);
         hasClockImage = true;
     }
     
@@ -80,7 +81,6 @@ public:
     void draw();
     
     bool isInside(ofMatrix4x4 m) {
-        
-        return true;
+        return clockImage.getColor(m.getTranslation().x + radius, m.getTranslation().y + radius).a != 0;
     }
 };

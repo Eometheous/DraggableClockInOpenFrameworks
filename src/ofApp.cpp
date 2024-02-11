@@ -70,23 +70,37 @@ void ofApp::mouseDragged(int x, int y, int button){
         myClock.pos.x = x + vec.x;
         myClock.pos.y = y + vec.y;
     }
+    else if (mClock.isGettingDragged) {
+        mClock.translationMatrix.translate(ofVec3f(x - mClock.translationMatrix.getTranslation().x + vec.x, y - mClock.translationMatrix.getTranslation().y + vec.y, 0));
+    }
     
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     
-    glm::vec2 clickedPosition = glm::vec2(x, y);
-    
-    if (myClock.isInside(clickedPosition)) {
-        vec = glm::vec2(myClock.pos.x - x, myClock.pos.y - y);
-        myClock.isGettingDragged = true;
+    glm::vec3 clickedPosition = glm::vec3(x, y, 0);
+    if (matrixClockIsActive) {
+        ofMatrix4x4 clickedPositionMatrix;
+        clickedPositionMatrix.translate(clickedPosition);
+        clickedPositionMatrix.translate(mClock.translationMatrix.getInverse().getTranslation());
+        if (mClock.isInside(clickedPositionMatrix)) {
+            vec = glm::vec3(mClock.translationMatrix.getTranslation().x - x, mClock.translationMatrix.getTranslation().y - y, 0);
+            mClock.isGettingDragged = true;
+        }
+    }
+    else {
+        if (myClock.isInside(clickedPosition)) {
+            vec = glm::vec2(myClock.pos.x - x, myClock.pos.y - y);
+            myClock.isGettingDragged = true;
+        }
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
     myClock.isGettingDragged = false;
+    mClock.isGettingDragged = false;
 }
 
 //--------------------------------------------------------------
