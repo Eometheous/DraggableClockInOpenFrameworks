@@ -32,7 +32,10 @@ public:
     bool isGettingDragged = false;
     bool hasClockImage = false;
     
-    double secondsInRadians, minutesInRadians, hoursInRadians;
+    
+    glm::vec2 secondHand = glm::vec2(0, radius);
+    glm::vec2 minuteHand = glm::vec2(0, radius);
+    glm::vec2 hourHand = glm::vec2(0, radius / 2);
     
     ofImage clockImage;
     
@@ -66,10 +69,12 @@ public:
 
 class MatrixClock : public Clock {
 public:
-    ofMatrix4x4 matrix;
+    ofMatrix4x4 translationMatrix;
+    ofMatrix4x4 scaleMatrix;
+    ofMatrix4x4 rotationMatrix;
     
     MatrixClock(ofMatrix4x4 startingMatrix, int startingRadius) : Clock (startingRadius) {
-        matrix = startingMatrix;
+        translationMatrix = startingMatrix;
     }
     
     void draw();

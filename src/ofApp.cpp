@@ -9,7 +9,7 @@ MatrixClock mClock = MatrixClock(ofMatrix4x4(), 200);
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    mClock.matrix.translate(ofWindowSettings().getWidth()/2, ofWindowSettings().getHeight()/2, 0);
+    mClock.translationMatrix.translate(ofWindowSettings().getWidth()/2, ofWindowSettings().getHeight()/2, 0);
     
     myClock.setImage("./images/DiscordProfile.png");
     mClock.setImage("./images/DiscordProfile.png");
@@ -17,14 +17,14 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-//    myClock.update();
-    mClock.update();
+    myClock.update();
+//    mClock.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-//    myClock.draw();
-    mClock.draw();
+    myClock.draw();
+//    mClock.draw();
 }
 
 //--------------------------------------------------------------
@@ -35,15 +35,15 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if (key == 113) {
-        mClock.matrix.rotate(15, mClock.matrix.getTranslation().x, mClock.matrix.getTranslation().y, 0);
+        mClock.translationMatrix.rotate(15, mClock.translationMatrix.getTranslation().x, mClock.translationMatrix.getTranslation().y, 0);
     }
     if (key == 101) {
-        mClock.matrix.rotate(-15, mClock.matrix.getTranslation().x, mClock.matrix.getTranslation().y, 0);
+        mClock.translationMatrix.rotate(-15, mClock.translationMatrix.getTranslation().x, mClock.translationMatrix.getTranslation().y, 0);
     }
-    if (key == 119) mClock.matrix.translate(0, -15, 0);
-    if (key == 97) mClock.matrix.translate(-15, 0, 0);
-    if (key == 115) mClock.matrix.translate(0, 15, 0);
-    if (key == 100) mClock.matrix.translate(15, 0, 0);
+    if (key == 119) mClock.translationMatrix.translate(0, -15, 0);
+    if (key == 97) mClock.translationMatrix.translate(-15, 0, 0);
+    if (key == 115) mClock.translationMatrix.translate(0, 15, 0);
+    if (key == 100) mClock.translationMatrix.translate(15, 0, 0);
 }
 
 //--------------------------------------------------------------
@@ -114,13 +114,18 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void Clock::update() {
     int seconds = ofGetSeconds();
-    secondsInRadians = (seconds * 6 * M_PI) / 180;
+    float secondsInRadians = (seconds * 6 * M_PI) / 180;
     
     int minutes = ofGetMinutes();
-    minutesInRadians = (minutes * 6 * M_PI) / 180 + secondsInRadians / 60;
+    float minutesInRadians = (minutes * 6 * M_PI) / 180 + secondsInRadians / 60;
     
     int hours = ofGetHours();
-    hoursInRadians = (hours * 30 * M_PI) / 180 + minutesInRadians / 60;
+    float hoursInRadians = (hours * 30 * M_PI) / 180 + minutesInRadians / 60;
+    
+    secondHand = glm::vec2(radius * sin(secondsInRadians), radius * cos(secondsInRadians) * -1);
+    minuteHand = glm::vec2(radius * sin(minutesInRadians), radius * cos(minutesInRadians) * -1);
+    hourHand = glm::vec2(radius / 2 * sin(hoursInRadians), radius / 2 * cos(hoursInRadians) * -1);
+    
 
 }
 
@@ -139,15 +144,15 @@ void Clock::draw() {
     // set second hand color to red and draw line
     ofSetLineWidth(2);
     ofSetColor(255, 0, 0);
-    ofDrawLine(pos.x, pos.y, pos.x + radius * sin(secondsInRadians), pos.y + radius * cos(secondsInRadians) * -1);
+    ofDrawLine(pos, secondHand + pos);
     
     // draw minute and hour hand lines as black
     ofSetColor(0, 0, 0);
     ofSetLineWidth(5);
-    ofDrawLine(pos.x, pos.y, pos.x + radius * sin(minutesInRadians), pos.y + radius * cos(minutesInRadians) * -1);
+    ofDrawLine(pos,minuteHand + pos);
     
     ofSetLineWidth(10);
-    ofDrawLine(pos.x, pos.y, pos.x + radius / 2 * sin(hoursInRadians), pos.y + radius / 2 * cos(hoursInRadians) * -1);
+    ofDrawLine(pos,hourHand + pos);
     
     // draw a small circle in the center to hide weird edges of clock hands
     ofDrawCircle(pos.x, pos.y, 10);
@@ -160,22 +165,22 @@ void Clock::draw() {
 
 void MatrixClock::draw() {
     ofSetColor(255, 255, 255);
-    if (hasClockImage) clockImage.draw(matrix.getTranslation().x - radius, matrix.getTranslation().y - radius, radius * 2, radius * 2);
+    if (hasClockImage) clockImage.draw(translationMatrix.getTranslation().x - radius, translationMatrix.getTranslation().y - radius, radius * 2, radius * 2);
     
     // set second hand color to red and draw line
     ofSetLineWidth(2);
     ofSetColor(255, 0, 0);
-    ofDrawLine(matrix.getTranslation().x, matrix.getTranslation().y, matrix.getTranslation().x + radius * sin(secondsInRadians), matrix.getTranslation().y + radius * cos(secondsInRadians) * -1);
+//    ofDrawLine(translationMatrix.getTranslation().x, translationMatrix.getTranslation().y, translationMatrix.getTranslation().x + radius * sin(secondsInRadians), translationMatrix.getTranslation().y + radius * cos(secondsInRadians) * -1);
     
     // draw minute and hour hand lines as black
     ofSetColor(0, 0, 0);
     ofSetLineWidth(5);
     
-    ofDrawLine(matrix.getTranslation().x, matrix.getTranslation().y, matrix.getTranslation().x + radius * sin(minutesInRadians), matrix.getTranslation().y + radius * cos(minutesInRadians) * -1);
+//    ofDrawLine(translationMatrix.getTranslation().x, translationMatrix.getTranslation().y, translationMatrix.getTranslation().x + radius * sin(minutesInRadians), translationMatrix.getTranslation().y + radius * cos(minutesInRadians) * -1);
     
     ofSetLineWidth(10);
-    ofDrawLine(matrix.getTranslation().x, matrix.getTranslation().y, matrix.getTranslation().x + radius / 2 * sin(hoursInRadians), matrix.getTranslation().y + radius / 2 * cos(hoursInRadians) * -1);
+//    ofDrawLine(translationMatrix.getTranslation().x, translationMatrix.getTranslation().y, translationMatrix.getTranslation().x + radius / 2 * sin(hoursInRadians), translationMatrix.getTranslation().y + radius / 2 * cos(hoursInRadians) * -1);
     
     // draw a small circle in the center to hide weird edges of clock hands
-    ofDrawCircle(matrix.getTranslation(), 10);
+    ofDrawCircle(translationMatrix.getTranslation(), 10);
 }
