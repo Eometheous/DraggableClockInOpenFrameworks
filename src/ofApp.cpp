@@ -6,9 +6,11 @@ Clock myClock = Clock(glm::vec2(ofWindowSettings().getWidth()/2, ofWindowSetting
 
 MatrixClock mClock = MatrixClock(ofMatrix4x4(), 200);
 
+bool matrixClockIsActive;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    matrixClockIsActive = false;
     mClock.translationMatrix.translate(ofWindowSettings().getWidth()/2, ofWindowSettings().getHeight()/2, 0);
     
     myClock.setImage("./images/DiscordProfile.png");
@@ -17,14 +19,14 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    myClock.update();
-//    mClock.update();
+    if (matrixClockIsActive) mClock.update();
+    else myClock.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    myClock.draw();
-//    mClock.draw();
+    if (matrixClockIsActive) mClock.draw();
+    else myClock.draw();
 }
 
 //--------------------------------------------------------------
@@ -34,16 +36,21 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if (key == 113) {
-        mClock.translationMatrix.rotate(15, mClock.translationMatrix.getTranslation().x, mClock.translationMatrix.getTranslation().y, 0);
+    if (matrixClockIsActive) {
+        if (key == 113) mClock.rotationMatrix.rotate(15, 0, 0, mClock.radius);
+        if (key == 101) mClock.rotationMatrix.rotate(-15, 0, 0, mClock.radius);
+        if (key == 57357) mClock.rotationMatrix.rotate(15, mClock.radius,0 , 0);
+        if (key == 57359) mClock.rotationMatrix.rotate(-15, mClock.radius,0 , 0);
+        if (key == 57356) mClock.rotationMatrix.rotate(-15, 0, mClock.radius , 0);
+        if (key == 57358) mClock.rotationMatrix.rotate(15, 0, mClock.radius, 0);
+        
+        if (key == 119) mClock.translationMatrix.translate(0, -15, 0);
+        if (key == 97) mClock.translationMatrix.translate(-15, 0, 0);
+        if (key == 115) mClock.translationMatrix.translate(0, 15, 0);
+        if (key == 100) mClock.translationMatrix.translate(15, 0, 0);
     }
-    if (key == 101) {
-        mClock.translationMatrix.rotate(-15, mClock.translationMatrix.getTranslation().x, mClock.translationMatrix.getTranslation().y, 0);
-    }
-    if (key == 119) mClock.translationMatrix.translate(0, -15, 0);
-    if (key == 97) mClock.translationMatrix.translate(-15, 0, 0);
-    if (key == 115) mClock.translationMatrix.translate(0, 15, 0);
-    if (key == 100) mClock.translationMatrix.translate(15, 0, 0);
+    
+    if (key == 13) matrixClockIsActive = !matrixClockIsActive;
 }
 
 //--------------------------------------------------------------
@@ -122,9 +129,9 @@ void Clock::update() {
     int hours = ofGetHours();
     float hoursInRadians = (hours * 30 * M_PI) / 180 + minutesInRadians / 60;
     
-    secondHand = glm::vec3(radius * sin(secondsInRadians), radius * cos(secondsInRadians) * -1, 0) + pos;
-    minuteHand = glm::vec3(radius * sin(minutesInRadians), radius * cos(minutesInRadians) * -1, 0) + pos;
-    hourHand = glm::vec3(radius / 2 * sin(hoursInRadians), radius / 2 * cos(hoursInRadians) * -1, 0) + pos;
+    secondHand = glm::vec3(radius * sin(secondsInRadians), radius * cos(secondsInRadians) * -1, 0);
+    minuteHand = glm::vec3(radius * sin(minutesInRadians), radius * cos(minutesInRadians) * -1, 0);
+    hourHand = glm::vec3(radius / 2 * sin(hoursInRadians), radius / 2 * cos(hoursInRadians) * -1, 0);
     
 
 }
@@ -144,15 +151,15 @@ void Clock::draw() {
     // set second hand color to red and draw line
     ofSetLineWidth(2);
     ofSetColor(255, 0, 0);
-    ofDrawLine(pos, secondHand);
+    ofDrawLine(pos, secondHand + pos);
     
     // draw minute and hour hand lines as black
     ofSetColor(0, 0, 0);
     ofSetLineWidth(5);
-    ofDrawLine(pos,minuteHand);
+    ofDrawLine(pos,minuteHand + pos);
     
     ofSetLineWidth(10);
-    ofDrawLine(pos,hourHand);
+    ofDrawLine(pos,hourHand + pos);
     
     // draw a small circle in the center to hide weird edges of clock hands
     ofDrawCircle(pos.x, pos.y, 10);
@@ -164,24 +171,32 @@ void Clock::draw() {
 }
 
 void MatrixClock::draw() {
+    glm::mat4 i = rotationMatrix * translationMatrix;
+    
+    ofPushMatrix();
+    
+    ofMultMatrix(i);
+    
     ofSetColor(255, 255, 255);
-    if (hasClockImage) clockImage.draw(translationMatrix.getTranslation().x - radius, translationMatrix.getTranslation().y - radius, radius * 2, radius * 2);
+    if (hasClockImage) clockImage.draw(- radius, - radius, radius * 2, radius * 2);
     
     // set second hand color to red and draw line
     ofSetLineWidth(2);
     ofSetColor(255, 0, 0);
-    ofDrawLine(translationMatrix.getTranslation(), minuteHand);
-//    ofDrawLine(translationMatrix.getTranslation().x, translationMatrix.getTranslation().y, translationMatrix.getTranslation().x + radius * sin(secondsInRadians), translationMatrix.getTranslation().y + radius * cos(secondsInRadians) * -1);
+    ofDrawLine(glm::vec3(0,0,0), secondHand);
     
     // draw minute and hour hand lines as black
     ofSetColor(0, 0, 0);
     ofSetLineWidth(5);
     
-//    ofDrawLine(translationMatrix.getTranslation().x, translationMatrix.getTranslation().y, translationMatrix.getTranslation().x + radius * sin(minutesInRadians), translationMatrix.getTranslation().y + radius * cos(minutesInRadians) * -1);
+    ofDrawLine(glm::vec3(0,0,0), minuteHand);
     
     ofSetLineWidth(10);
-//    ofDrawLine(translationMatrix.getTranslation().x, translationMatrix.getTranslation().y, translationMatrix.getTranslation().x + radius / 2 * sin(hoursInRadians), translationMatrix.getTranslation().y + radius / 2 * cos(hoursInRadians) * -1);
+    ofDrawLine(glm::vec3(0,0,0), hourHand);
     
     // draw a small circle in the center to hide weird edges of clock hands
-    ofDrawCircle(translationMatrix.getTranslation(), 10);
+    ofFill();
+    ofDrawCircle(0, 0, 10);
+    
+    ofPopMatrix();
 }
