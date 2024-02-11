@@ -122,9 +122,9 @@ void Clock::update() {
     int hours = ofGetHours();
     float hoursInRadians = (hours * 30 * M_PI) / 180 + minutesInRadians / 60;
     
-    secondHand = glm::vec2(radius * sin(secondsInRadians), radius * cos(secondsInRadians) * -1);
-    minuteHand = glm::vec2(radius * sin(minutesInRadians), radius * cos(minutesInRadians) * -1);
-    hourHand = glm::vec2(radius / 2 * sin(hoursInRadians), radius / 2 * cos(hoursInRadians) * -1);
+    secondHand = glm::vec3(radius * sin(secondsInRadians), radius * cos(secondsInRadians) * -1, 0) + pos;
+    minuteHand = glm::vec3(radius * sin(minutesInRadians), radius * cos(minutesInRadians) * -1, 0) + pos;
+    hourHand = glm::vec3(radius / 2 * sin(hoursInRadians), radius / 2 * cos(hoursInRadians) * -1, 0) + pos;
     
 
 }
@@ -144,15 +144,15 @@ void Clock::draw() {
     // set second hand color to red and draw line
     ofSetLineWidth(2);
     ofSetColor(255, 0, 0);
-    ofDrawLine(pos, secondHand + pos);
+    ofDrawLine(pos, secondHand);
     
     // draw minute and hour hand lines as black
     ofSetColor(0, 0, 0);
     ofSetLineWidth(5);
-    ofDrawLine(pos,minuteHand + pos);
+    ofDrawLine(pos,minuteHand);
     
     ofSetLineWidth(10);
-    ofDrawLine(pos,hourHand + pos);
+    ofDrawLine(pos,hourHand);
     
     // draw a small circle in the center to hide weird edges of clock hands
     ofDrawCircle(pos.x, pos.y, 10);
@@ -170,6 +170,7 @@ void MatrixClock::draw() {
     // set second hand color to red and draw line
     ofSetLineWidth(2);
     ofSetColor(255, 0, 0);
+    ofDrawLine(translationMatrix.getTranslation(), minuteHand);
 //    ofDrawLine(translationMatrix.getTranslation().x, translationMatrix.getTranslation().y, translationMatrix.getTranslation().x + radius * sin(secondsInRadians), translationMatrix.getTranslation().y + radius * cos(secondsInRadians) * -1);
     
     // draw minute and hour hand lines as black

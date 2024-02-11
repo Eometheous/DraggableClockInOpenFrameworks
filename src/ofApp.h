@@ -33,9 +33,9 @@ public:
     bool hasClockImage = false;
     
     
-    glm::vec2 secondHand = glm::vec2(0, radius);
-    glm::vec2 minuteHand = glm::vec2(0, radius);
-    glm::vec2 hourHand = glm::vec2(0, radius / 2);
+    glm::vec3 secondHand = glm::vec3(0, radius, 0);
+    glm::vec3 minuteHand = glm::vec3(0, radius, 0);
+    glm::vec3 hourHand = glm::vec3(0, radius / 2, 0);
     
     ofImage clockImage;
     
