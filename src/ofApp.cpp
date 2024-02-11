@@ -37,19 +37,20 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if (matrixClockIsActive) {
-        if (key == 113) mClock.rotationMatrix.rotate(-15, 0, 0, mClock.radius);
-        if (key == 101) mClock.rotationMatrix.rotate(15, 0, 0, mClock.radius);
-        if (key == 57357) mClock.rotationMatrix.rotate(15, mClock.radius,0 , 0);
-        if (key == 57359) mClock.rotationMatrix.rotate(-15, mClock.radius,0 , 0);
-        if (key == 57356) mClock.rotationMatrix.rotate(-15, 0, mClock.radius , 0);
-        if (key == 57358) mClock.rotationMatrix.rotate(15, 0, mClock.radius, 0);
+        if (key == 113) mClock.rotationMatrix.rotate(-15, 0, 0, mClock.radius);     // rotate counter clock wise by pressing Q
+        if (key == 101) mClock.rotationMatrix.rotate(15, 0, 0, mClock.radius);      // rotate clock wise by pressing E
+        if (key == 57357) mClock.rotationMatrix.rotate(15, mClock.radius,0 , 0);    // rotate up by pressing up arrow
+        if (key == 57359) mClock.rotationMatrix.rotate(-15, mClock.radius,0 , 0);   // rotate down by pressing down arrow
+        if (key == 57356) mClock.rotationMatrix.rotate(-15, 0, mClock.radius , 0);  // rotate left by pressing left arrow
+        if (key == 57358) mClock.rotationMatrix.rotate(15, 0, mClock.radius, 0);    // rotate right by pressing right arrow
         
-        if (key == 119) mClock.translationMatrix.translate(0, -15, 0);
-        if (key == 97) mClock.translationMatrix.translate(-15, 0, 0);
-        if (key == 115) mClock.translationMatrix.translate(0, 15, 0);
-        if (key == 100) mClock.translationMatrix.translate(15, 0, 0);
+        if (key == 119) mClock.translationMatrix.translate(0, -15, 0);  // go up by pressing W
+        if (key == 97) mClock.translationMatrix.translate(-15, 0, 0);   // go left by pressing A
+        if (key == 115) mClock.translationMatrix.translate(0, 15, 0);   // go down by pressind S
+        if (key == 100) mClock.translationMatrix.translate(15, 0, 0);   // go right by pressing D
     }
     
+    // switch which clock is active
     if (key == 13) matrixClockIsActive = !matrixClockIsActive;
 }
 
@@ -79,7 +80,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     
-    glm::vec3 clickedPosition = glm::vec3(x, y, 0);
+    glm::vec2 clickedPosition = glm::vec2(x, y);
     if (matrixClockIsActive) {
         ofMatrix4x4 clickedPositionMatrix;
         clickedPositionMatrix.translate(clickedPosition);
