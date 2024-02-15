@@ -49,8 +49,8 @@ void ofApp::keyPressed(int key){
         if (key == 115) mClock.translationMatrix.translate(0, 15, 0);   // go down by pressind S
         if (key == 100) mClock.translationMatrix.translate(15, 0, 0);   // go right by pressing D
         
-        if (key == 45) mClock.scaleMatrix.scale(.5, .5, 0); // zoom out with -
-        if (key == 61) mClock.scaleMatrix.scale(2, 2, 0); // zoom in with +
+        if (key == 45) mClock.scaleMatrix.scale(.9, .9, 0); // zoom out with -
+        if (key == 61) mClock.scaleMatrix.scale(1.1, 1.1, 0); // zoom in with +
     }
     
     // switch which clock is active
@@ -88,8 +88,8 @@ void ofApp::mousePressed(int x, int y, int button){
         ofMatrix4x4 clickedPositionMatrix;
         clickedPositionMatrix.translate(clickedPosition);
         clickedPositionMatrix.translate(mClock.translationMatrix.getInverse().getTranslation());
-        clickedPositionMatrix.scale(glm::vec3(1,1,0) / mClock.scaleMatrix.getScale());
         clickedPositionMatrix.rotate(mClock.rotationMatrix.getInverse().getRotate());
+        clickedPositionMatrix.scale(glm::vec3(1,1,0) / mClock.scaleMatrix.getScale());
         
         if (mClock.isInside(clickedPositionMatrix)) {
             vec = glm::vec3(mClock.translationMatrix.getTranslation().x - x, mClock.translationMatrix.getTranslation().y - y, 0);
