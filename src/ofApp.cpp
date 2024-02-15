@@ -37,20 +37,20 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if (matrixClockIsActive) {
-        if (key == 113) mClock.rotationMatrix.rotate(-15, 0, 0, mClock.radius);     // rotate counter clock wise by pressing Q
-        if (key == 101) mClock.rotationMatrix.rotate(15, 0, 0, mClock.radius);      // rotate clock wise by pressing E
+        if (key == 'q') mClock.rotationMatrix.rotate(-15, 0, 0, mClock.radius);     // rotate counter clock wise by pressing Q
+        if (key == 'e') mClock.rotationMatrix.rotate(15, 0, 0, mClock.radius);      // rotate clock wise by pressing E
         if (key == 57357) mClock.rotationMatrix.rotate(15, mClock.radius,0 , 0);    // rotate up by pressing up arrow
         if (key == 57359) mClock.rotationMatrix.rotate(-15, mClock.radius,0 , 0);   // rotate down by pressing down arrow
         if (key == 57356) mClock.rotationMatrix.rotate(-15, 0, mClock.radius , 0);  // rotate left by pressing left arrow
         if (key == 57358) mClock.rotationMatrix.rotate(15, 0, mClock.radius, 0);    // rotate right by pressing right arrow
         
-        if (key == 119) mClock.translationMatrix.translate(0, -15, 0);  // go up by pressing W
-        if (key == 97) mClock.translationMatrix.translate(-15, 0, 0);   // go left by pressing A
-        if (key == 115) mClock.translationMatrix.translate(0, 15, 0);   // go down by pressind S
-        if (key == 100) mClock.translationMatrix.translate(15, 0, 0);   // go right by pressing D
+        if (key == 'w') mClock.translationMatrix.translate(0, -15, 0);  // go up by pressing W
+        if (key == 'a') mClock.translationMatrix.translate(-15, 0, 0);   // go left by pressing A
+        if (key == 's') mClock.translationMatrix.translate(0, 15, 0);   // go down by pressind S
+        if (key == 'd') mClock.translationMatrix.translate(15, 0, 0);   // go right by pressing D
         
-        if (key == 45) mClock.scaleMatrix.scale(.9, .9, 0); // zoom out with -
-        if (key == 61) mClock.scaleMatrix.scale(1.1, 1.1, 0); // zoom in with +
+        if (key == '-') mClock.scaleMatrix.scale(.9, .9, 0); // zoom out with -
+        if (key == '=') mClock.scaleMatrix.scale(1.1, 1.1, 0); // zoom in with +
     }
     
     // switch which clock is active
