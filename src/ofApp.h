@@ -81,6 +81,9 @@ public:
     void draw();
     
     bool isInside(ofMatrix4x4 m) {
+        m.translate(translationMatrix.getInverse().getTranslation());
+        m.rotate(rotationMatrix.getInverse().getRotate());
+        m.scale(glm::vec3(1,1,0) / scaleMatrix.getScale());
         return clockImage.getColor(m.getTranslation().x + radius, m.getTranslation().y + radius).a != 0;
     }
 };

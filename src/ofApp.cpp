@@ -87,9 +87,6 @@ void ofApp::mousePressed(int x, int y, int button){
     if (matrixClockIsActive) {
         ofMatrix4x4 clickedPositionMatrix;
         clickedPositionMatrix.translate(clickedPosition);
-        clickedPositionMatrix.translate(mClock.translationMatrix.getInverse().getTranslation());
-        clickedPositionMatrix.rotate(mClock.rotationMatrix.getInverse().getRotate());
-        clickedPositionMatrix.scale(glm::vec3(1,1,0) / mClock.scaleMatrix.getScale());
         
         if (mClock.isInside(clickedPositionMatrix)) {
             vec = glm::vec3(mClock.translationMatrix.getTranslation().x - x, mClock.translationMatrix.getTranslation().y - y, 0);
